@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CECYTE Región Papaloapan - Evento Deportivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 30px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .scoreboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .school-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .school-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .school-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .score {
+            font-size: 3em;
+            font-weight: bold;
+            color: #764ba2;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .participants {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .participants h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .participant-item {
+            padding: 8px;
+            background: white;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 3px solid #764ba2;
+        }
+
+        .admin-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .control-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-group h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .add-school-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .ranking {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .ranking-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .rank-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            width: 60px;
+        }
+
+        .rank-school {
+            flex: 1;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .rank-score {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .medal {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏆 CECYTE Región Papaloapan</h1>
+            <p class="subtitle">Evento Deportivo 2025</p>
+            <p><span class="live-indicator"></span><strong>EN VIVO</strong></p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('scoreboard')">📊 Marcador en Vivo</button>
+            <button class="tab-btn" onclick="showTab('ranking')">🥇 Clasificación</button>
+            <button class="tab-btn" onclick="showTab('admin')">⚙️ Panel de Control</button>
+        </div>
+
+        <div id="scoreboard" class="tab-content active">
+            <div class="scoreboard" id="scoreboardGrid"></div>
+        </div>
+
+        <div id="ranking" class="tab-content">
+            <div class="ranking" id="rankingList"></div>
+        </div>
+
+        <div id="admin" class="tab-content">
+            <div class="admin-panel">
+                <div class="control-group">
+                    <h3>📝 Agregar Nueva Escuela</h3>
+                    <div class="add-school-form">
+                        <input type="text" id="newSchoolName" placeholder="Nombre de la escuela">
+                        <button onclick="addSchool()">➕ Agregar Escuela</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>🎯 Modificar Puntuación</h3>
+                    <div class="input-group">
+                        <select id="schoolSelect"></select>
+                        <input type="number" id="pointsInput" placeholder="Puntos a agregar/restar" value="1">
+                        <div>
+                            <button onclick="updateScore(1)">➕ Sumar</button>
+                            <button onclick="updateScore(-1)" class="danger">➖ Restar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>👥 Gestionar Participantes</h3>
+                    <div class="input-group">
+                        <select id="schoolSelectParticipant"></select>
+                        <input type="text" id="participantName" placeholder="Nombre del participante">
+                        <button onclick="addParticipant()">➕ Agregar</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>🗑️ Eliminar Escuela</h3>
+                    <div class="input-group">
+                        <select id="schoolSelectDelete"></select>
+                        <button onclick="deleteSchool()" class="danger">🗑️ Eliminar Escuela</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let schools = [
+            { name: "CECYTE Tuxtepec", score: 0, participants: [] },
+            { name: "CECYTE Loma Bonita", score: 0, participants: [] },
+            { name: "CECYTE Playa Vicente", score: 0, participants: [] },
+            { name: "CECYTE Tierra Blanca", score: 0, participants: [] }
+        ];
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'ranking') {
+                renderRanking();
+            }
+        }
+
+        function renderScoreboard() {
+            const grid = document.getElementById('scoreboardGrid');
+            grid.innerHTML = '';
+            
+            schools.forEach((school, index) => {
+                const card = document.createElement('div');
+                card.className = 'school-card';
+                
+                let participantsHTML = '';
+                if (school.participants.length > 0) {
+                    participantsHTML = `
+                        <div class="participants">
+                            <h4>Participantes:</h4>
+                            ${school.participants.map(p => `
+                                <div class="participant-item">${p}</div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="school-name">${school.name}</div>
+                    <div class="score">${school.score}</div>
+                    <div style="text-align: center; color: #666;">puntos</div>
+                    ${participantsHTML}
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            updateSelects();
+        }
+
+        function renderRanking() {
+            const rankingList = document.getElementById('rankingList');
+            const sortedSchools = [...schools].sort((a, b) => b.score - a.score);
+            
+            rankingList.innerHTML = '<h2 style="color: #667eea; margin-bottom: 20px;">🏆 Tabla de Posiciones</h2>';
+            
+            sortedSchools.forEach((school, index) => {
+                const item = document.createElement('div');
+                item.className = 'ranking-item';
+                
+                let medal = '';
+                if (index === 0) medal = '🥇';
+                else if (index === 1) medal = '🥈';
+                else if (index === 2) medal = '🥉';
+                
+                item.innerHTML = `
+                    ${medal ? `<span class="medal">${medal}</span>` : ''}
+                    <div class="rank-number">#${index + 1}</div>
+                    <div class="rank-school">${school.name}</div>
+                    <div class="rank-score">${school.score} pts</div>
+                `;
+                
+                rankingList.appendChild(item);
+            });
+        }
+
+        function updateSelects() {
+            const selects = [
+                document.getElementById('schoolSelect'),
+                document.getElementById('schoolSelectParticipant'),
+                document.getElementById('schoolSelectDelete')
+            ];
+            
+            selects.forEach(select => {
+                select.innerHTML = schools.map((school, index) => 
+                    `<option value="${index}">${school.name}</option>`
+                ).join('');
+            });
+        }
+
+        function updateScore(multiplier) {
+            const schoolIndex = document.getElementById('schoolSelect').value;
+            const points = document.getElementById('pointsInput').value;
+            
+            schools[schoolIndex].score += parseInt(points) * multiplier;
+            if (schools[schoolIndex].score < 0) schools[schoolIndex].score = 0;
+            
+            renderScoreboard();
+        }
+
+        function addSchool() {
+            const name = document.getElementById('newSchoolName').value.trim();
+            if (name) {
+                schools.push({ name, score: 0, participants: [] });
+                document.getElementById('newSchoolName').value = '';
+                renderScoreboard();
+            } else {
+                alert('Por favor ingresa el nombre de la escuela');
+            }
+        }
+
+        function deleteSchool() {
+            const schoolIndex = document.getElementById('schoolSelectDelete').value;
+            if (confirm(`¿Estás seguro de eliminar ${schools[schoolIndex].name}?`)) {
+                schools.splice(schoolIndex, 1);
+                renderScoreboard();
+            }
+        }
+
+        function addParticipant() {
+            const schoolIndex = document.getElementById('schoolSelectParticipant').value;
+            const name = document.getElementById('participantName').value.trim();
+            
+            if (name) {
+                schools[schoolIndex].participants.push(name);
+                document.getElementById('participantName').value = '';
+                renderScoreboard();
+            } else {
+                alert('Por favor ingresa el nombre del participante');
+            }
+        }
+
+        renderScoreboard();
+    </script>
+</body>
+</html>
